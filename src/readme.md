@@ -2,12 +2,6 @@
 
 El siguiente documento explica el proceso de compilación del código y la ejecución del programa usando el algoritmo constructivo Greedy para la solución inicial y luego el algoritmo reparador Tabu Search para explorar y explotar.
 
-
-* [Instalación Base de Datos y Server](#instalacion-base-de-datos-y-server)
-* [API RESTful](#api-restful)
-* [Ejemplos de Request y Response](#ejemplos-de-request-y-response)
-* [Configurar IP](#configurar-ip)
-
 ## Compilación
 
 Para compilar hay que ubicarse dentro de esta carpeta en el Terminal y ejecutar:
