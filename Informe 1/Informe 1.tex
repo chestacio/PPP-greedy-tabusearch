@@ -1,0 +1,342 @@
+\documentclass[letter, 10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage[dvips]{graphicx}
+\usepackage{url}
+\usepackage[top=3cm,bottom=3cm,left=3.5cm,right=3.5cm,footskip=1.5cm,headheight=1.5cm,headsep=.5cm,textheight=3cm]{geometry}
+
+
+\begin{document}
+\title{Inteligencia Artificial \\ \begin{Large}Estado del Arte: Problema Progressive Party Problem\end{Large}}
+\author{Carlos Chesta Rivas}
+\date{12 de mayo de 2016}
+\maketitle
+
+
+%--------------------No borrar esta sección--------------------------------%
+\section*{Evaluación}
+
+\begin{tabular}{ll}
+Resumen (5\%): & \underline{\hspace{2cm}} \\
+Introducción (5\%):  & \underline{\hspace{2cm}} \\
+Definición del Problema (10\%):  & \underline{\hspace{2cm}} \\
+Estado del Arte (35\%):  & \underline{\hspace{2cm}} \\
+Modelo Matemático (20\%): &  \underline{\hspace{2cm}}\\
+Conclusiones (20\%): &  \underline{\hspace{2cm}}\\
+Bibliografía (5\%): & \underline{\hspace{2cm}}\\
+ &  \\
+\textbf{Nota Final (100\%)}:   & \underline{\hspace{2cm}}
+\end{tabular}
+%---------------------------------------------------------------------------%
+\vspace{2cm}
+
+
+\begin{abstract}
+
+\textit{Progressive Party Problem} o PPP consiste en cómo organizar una fiesta en un club de yates, donde hay dos categorías posibles de yates: yates anfitriones y yates invitados. La idea a grandes rasgos es que las tripulaciones de los yates invitados como unidad pueden visitar a diferentes yates anfitriones en cada periodo, mientras que la tripulación de un yate anfitrión debe quedarse en su lugar para atender a los invitados. La función objetivo es minimizar la cantidad de yates anfitriones, dado el costo que conlleva ser un anfitrión (comida, iluminación, etc). Este documento presenta distintas formulaciones y enfoques del problema así como sus ventajas y desventajas en la búsqueda de soluciones y los tiempos asociados a cada una de ellas.
+\end{abstract}
+
+\section{Introducción}
+
+Organizar una fiesta progresiva no es una tarea fácil, dada la cantidad de anfitriones e invitados. Encontrar la cantidad óptima de anfitriones que satisfagan a todos los invitados de igual manera puede volverse una compleja tarea. En esta ocasión, se plantea el conocido problema \textit{Progressive Party Problem} o conocido como PPP, por sus siglas en inglés, que consiste en una fiesta de un club de yates, el cual se identifican dos grupos: los yates que son anfitriones y los yates que son invitados. El problema natural de un organizador de este tipo de eventos es encontrar la cantidad adecuada de anfitriones para que los invitados sean atendidos de buena manera, considerando que no haya holgura de tiempo tanto para invitados sin estar siendo atendidos por un anfitrión como anfitriones sin estar atendiendo invitados.
+
+Este tipo de problemas no sólo se limita a un club de yates. Puede aplicarse perfectamente, por ejemplo, a fiestas costumbristas donde hay una cierta cantidad de stands y otra cierta cantidad de público asistente que quiere conocer cada stand, como el caso de \textit{Oktoberfest} que se celebra en Malloco, donde hay una cantidad fija (a determinar) de stands, cada uno con su producto, y otra cantidad conocida de asistentes, por lo que los organizadores deben encontrar el número de stands que permita proveer a los asistentes y a la vez minimizar los costos que conlleva cada uno.
+
+Este paper está compuesta por la Definición del Problema donde se explica el problema a fondo; el Estado del Arte donde se aborda en qué está la literatura actualmente con respecto a este problema, análisis de algoritmos que buscan una solución, etc; el Modelo Matemático donde se plantea matemáticamente la formulación de PPP junto con sus respectivos espacios de búsqueda además de las restricciones características asociadas para llevar a cabo encontrar la(s) solución(es); finalmente las Conclusiones donde se concluyen los distintos algoritmos, dando un pequeño análisis al respecto, además de plantear algunos lineamientos para investigaciones futuras.
+
+
+\section{Definición del Problema}
+\subsection{Origen del Problema}
+PPP fue planteado por el matemático Peter M. Hubbard\cite{Smith1996}, miembro del Departamento de Matemática de la Universidad de Southampton en el año 1995 que también es miembro de la Sea Wych Owners Association. El problema original plantea un caso en que en un club de yates hay una fiesta. 
+
+
+\subsection{Explicación del Problema}
+El problema es el siguiente. Existen un total de $n$ yates, cada uno con sus respectivas tripulaciones. Cada yate tiene una capacidad máxima de tripulación determinada, y también la cantidad de dicha tripulación es conocida de antemano. La idea es que miembros del club sociabilicen lo más posible, para eso se dividen en yates anfitriones y yates invitados. Las tripulaciones de los yates invitados visitan en turnos a yates anfitriones, es decir, los invitados pueden estar en un yate anfitrión por una cierta cantidad de tiempo, luego rotan a otro yate anfitrión. Mientras que estos últimos no pueden moverse de su yate ya que deben atender a los invitados. El número de rondas en que se mueven las tripulaciones invitadas es conocida.
+
+El objetivo es encontrar un número mínimo de yates anfitriones que puedan satisfacer a la totalidad de tripulaciones invitadas, dado el costo que conlleva ser un yate anfitrión\cite{Smith1996}.
+
+Como supuesto se considera que en todo momento la tripulación de cierto yate permanece unida, esto es, no se separan en ningún momento. También se tiene que una tripulación invitada no puede revisitar a un yate anfitrión. Dado lo anterior, se cumple que dos tripulaciones no pueden juntarse más de una vez. Del total de yates, hay una cantidad fija de barcos que serán designados como anfitriones por lo que los restantes serán los yates invitados.
+
+\subsection{Posibles variantes}
+También es posible definir ciertas variaciones del problema original añadiendo ciertas restricciones que se dan en el mundo real\cite{Kalvelagen20031713}\cite{Smith1996} tal como que se definen los primeros $m$, con $m<n$, botes como anfitriones compuestos por el organizador y otros $(m-1)$ compuestos por padres con sus hijos, pero los padres se quedan en los yates atendiendo a los invitados mientras que los hijos se separan visitando otros yates por lo que dicho conjunto de tripulación se puede considerar como un yate invitado virtual de capacidad cero.
+
+\subsection{Problemas Relacionados}
+
+Dado que \textit{Progressive Party Problem} es catalogado un problema combinatorio\cite{Hooker1999395} del tipo de asignación, existe una serie de otros problemas conocidos en la literatura que también son catalogados de este tipo. Un clásico problema es el Nure Scheduling Problem que consiste en asignar una mínima cantidad de enfermeras tomando en cuenta los turnos que disponen y las vacaciones que poseen pero que puedan satisfacer todas las necesidades del hospital en que trabajen, de modo que no hayan enfermeras en modo ocioso ni tampoco que falten enfermeras.
+
+%Explicación del problema que se va a estudiar, en qué consiste, cuáles son sus variables , restricciones y objetivo(s) de manera %general (en palabras, no una formulación matemática). Debe entenderse claramente el problema y qué busca resolver.
+%Explicar si existen problemas relacionados.
+%Destacar, si existen, las variantes más conocidas.\\
+%Redactar en tercera persona, sin faltas de ortografía y referenciar correctamente sus fuentes mediante el comando  \verb+\cite{ }+. Por %ejemplo, para hacer referencia al artículo de algoritmos híbridos para problemas de satisfacción 
+% de restricciones.
+
+\section{Estado del Arte}
+
+\subsection{Origen del problema}
+
+El planteamiento de este problema remonta en el año 1995 por P. Hubbard, pero formalizada su investigación en el paper de B. Smith et al \cite{Smith1996}. En éste, Smith plantea dos posibles enfoques para resolver este problema: con Programación Lineal Entera (ILP, por sus siglas en inglés) y por el método de Satisfacción de Restricciones (CSP, por sus siglas en inglés). 
+
+En esta investigación se toma en cuenta el caso de prueba de 39 yates en total, con una tripulación que varía entre 1 y 7 pasajeros por yate, los cuales los yates invitados rotan entre los yates anfitriones en una cantidad de rondas de $T=6$ con 30 minutos por ronda. Además, se considera que el primer yate corresponde al organizador con una capacidad de 6 personas, luego dos yates más que su tripulación son padres con niños, por lo que los padres se quedan en sus yates atendiendo a invitados, mientras que los niños se separan de sus padres convirtiéndose así en 3 yates virtuales con capacidad de cero. Por lo tanto, para el análisis se considera un total de 42 yates.
+
+\subsection{Resolución}
+
+P. Hubbard plantea el problema inicialmente usando IPL\cite{Smith1996}. Define dos variables binarias: $\delta_i=1$ ssi el yate $i$ es anfitrión y $\gamma_{ikt}=1$ si el yate $k$ es invitado del yate $i$ en el periodo $t$. La función objetivo es minimizar la cantidad de yates anfitriones, esto es:
+
+\begin{equation}
+    min \sum_i \delta_i
+\end{equation}
+
+Usando este primer enfoque se tiene que con 12 yates anfitriones es posible atender al resto de los 30 invitados. Sin embargo, no fue posible determinar si para 13 yates anfitriones también corresponde a una solución. Para ello se planteó como heurística ordenar en forma descendiente los yates según su capacidad máxima. De esta forma se obtiene que es posible obtener 13 yates anfitriones, siendo los primeros 13 yates del total los que les corresponde el papel de anfitrión.
+
+También se encontró una solución con 14 anfitriones pero se tuvo que relajar algunas restricciones y especificar que los primeros 14 yates tuvieran que ser anfitriones. Para este caso la solución fue encontrada en 598 segundos. No obstante, para soluciones mayores a 14 yates fue imposible determinar una solución ya que luego de 189 horas en ejecución tuvo que abortarse.
+
+Luego, a modo de comparación, Smith plantea otro enfoque para abordar el problema: La resolución mediante CSP, el cual fue implementado usando ILOG Solver\cite{Puget94ac++}, que es una herramienta de programación de restricciones usando librerías en C++. Esta herramienta procesa el problema usando un backtracking simple aunque también es posible realizarlo usando \textit{full lookahead}. H.P. Williams\cite{Williams92} llega a conclusiones similares que el de Smith. Señala que el modelo de programación lineal entera es muy largo de resolver, en cambio con programación de restricciones se resuelve más rápido.
+
+Una ventaja de este enfoque fue que la formulación como CSP fue mucho más compacta ya que el modelado queda directamente centrado en sus restricciones por lo que es más fácil abordar soluciones que satisfagan estas restricciones. La idea es que usando la técnica de \textit{full lookahead} las restricciones son usadas para identificar los efectos de futuras instancias de las variables y si existe un valor en el dominio de una futura variable que entre en conflicto con la asignación actual es temporalmente eliminada. Bajo esta premisa es posible reducir los tiempos. Producto de lo señalado en lo anterior, es de suma importancia definir heurísticas que permitan un mejor filtrado de instancias que se sabrán que no serán parte de las soluciones. En este caso conviene usar una basado en el principio "fail first" (fallo primero), el cual consiste en elegir una variable que sea difícil de asignar, esto es, escogiendo variables que tengan un dominio pequeño\cite{Smith1996}. Este modelo está detallado en la sección 4.3.
+
+Smith\cite{Smith1996} señala que el problema fue testeado usando CSP, pero usando versiones más pequeñas del problema, es decir, con un número reducido de yates y anfitriones. Señala que, usando una IPX SPARCstation, puro resolverso bastante rápido (con una cantidad considerable de pequeños errores, fáciles de corregir usando backtracking). No obstante, usando la versión completa del problema no fue posible resolverlo usando CSP. Para ello plantea una nueva heurística que es analizar de forma separada cada periodo de tiempo $t\in T$ del problema, pero almacenando las soluciones internas de cada periodo. Como resultado obtuvo las soluciones bastante rápidos. Es por esto que concluye que usando CSP por sí solo no tiene utilidad alguna ya que no encuentra soluciones al problema general, pero si se interviene manualmente entonces el rendimiento aumenta considerablemente con respecto a la búsqueda de soluciones usando ILP.
+
+J. N. Hooker\cite{Hooker1999395} propone la resolución del problema usando Programación Lineal/Lógica Mixta (MLLP, por sus siglas en inglés) y hace la comparación con el modelo de Programación Entera Lineal Mixta (MILP, por sus siglas en inglés) señalado por \cite{Kalvelagen20031713}. La idea es aprovechar el enfoque que posee MLLP de optimización de problemas que posean elementos discretos y continuos. MLLP toma como base la premisa hecha por MILP pero además agregando enfoques del tipo lógicas como implicancias, entre otros.
+
+Usando una versión reducida del problema, Hooker en sus resultados señala que resolviendo el problema con el enfoque MLLP obtiene resultados muy buenos en comparación a la resolución del problema como MILP. A modo de resumen se presenta la siguiente tabla con sus resultados\cite{Hooker1999395}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l}
+\cline{1-4}
+\multicolumn{2}{|l|}{}        & \multicolumn{2}{l|}{Segundos}  &  \\ \cline{1-4}
+Botes         & Periodos      & MLLP    & MILP                 &  \\ \cline{1-4}
+5             & 2             & 0.006   & 0.173                &  \\ \cline{1-4}
+6 & 3 & 0.007 & 0.445 &  \\ \cline{1-4}
+7             & 3             & 0.007   & 1.014                &  \\ \cline{1-4}
+8             & 4             & 0.008   & 1.525                &  \\ \cline{1-4}
+10            & 4             & 0.011   & 2.161                &  \\ \cline{1-4}
+\end{tabular}
+\caption{Comparación de tiempos de computación para PPP reducido usando MILP y MLLP}
+\end{table}
+
+Tanto Hooker\cite{Hooker1999395} como G. Ottosson\cite{ottosson1999integration} señalan que usando la técnica de MLLP en el problema PPP se obtienen resultados grandiosos.
+
+J. Walser \cite{Walser:1997:SLP:1867406.1867448} y P. Galinier\cite{Galinier1999} proponen la resolución del PPP no usando técnincas de resolución de búsqueda completa, sino que proponen resolverlo usando técnicas de búsqueda local con algoritmos como \textit{Tabu Search}, \textit{Algoritmo de Metrópolis} que es una versión simplificada del algoritmo \textit{Simulated Annealing}\cite{Kirkpatrick671}. En sus resultados señalan que este método de resolución es bastante acertiva ya que usando simplemente \textit{Tabu Search} pudieron resolver el problema hasta con $T=9$ periodos de tiempo en tan solo del orden de segundos. Por lo que señalan que usando búsqueda local podría ser considerado una de las mejores formas para obtener resultados en PPP en poco tiempo\cite{Galinier1999}.
+
+
+%La información que describen en este punto se basa en los estudios realizados con antelación respecto al tema.
+%Lo más importante que se ha hecho hasta ahora con relación al problema. Debería responder preguntas como las siguientes:
+%?`cuándo surge?, ?`qué métodos se han usado para resolverlo?, ?`cuáles son los mejores algoritmos que se han creado hasta
+%la fecha?, ?`qué representaciones han tenido los mejores resultados?, ?`cuál es la tendencia actual para resolver el problema?, tipos de movimientos, heurísticas, métodos completos, tendencias, etc... Puede incluir gráficos comparativos o explicativos.\\
+
+
+
+\section{Modelo Matemático}
+
+\subsection{Programación Lineal Entera}
+
+El modelo planteado por Peter Hurbbard\cite{Smith1996} fue el primer modelo en abordar este tipo de problemas. Se tiene lo siguiente:
+
+\begin{description}
+    \item[Variables] \hfill
+      \begin{align*}
+        &\delta_i = \begin{cases} 1 \quad \text{si el yate $i$ es anfitrión} \\ 0 \quad \text{en otro caso} \end{cases}
+        \qquad \forall i=1..n
+      \end{align*}
+    \begin{align*}
+        &\gamma_{ikt} = \begin{cases} 1 \quad \text{si el yate $k$ es invitado del yate $i$ en el periodo t} \\ 0 \quad \text{en otro caso} \end{cases}
+        \qquad \forall i=1..n, \forall k=1..n, \forall t=1..T
+      \end{align*}
+  \item[Parámetros] \hfill
+    \begin{description}
+      \item[$B$:] número total de yates
+      \item[$c_i$:] tripulación del yate $i \qquad \forall i=1..n$
+      \item[$K_i$:] capacidad total del yate $i \qquad \forall i=1..n$
+      \item[$T$:] Cantidad de rondas
+    \end{description}
+
+    \item[Función Objetivo] \hfill
+      \begin{align*}
+        &\text{Min} \; \sum_i \delta_i
+      \end{align*}
+    \item[Restricciones] \hfill
+      \begin{align*}
+          \intertext{Un bote puede sólo puede ser visitado si es anfitrión (CD)}
+          \gamma_{ikt}-\delta_i \leq 0 \qquad \forall i,k,t; i\neq k
+          \intertext{La capacidad de los yates anfitriones no puede ser excedida (CCAP)}
+          \sum_{k,k\neq i}c_k\gamma_{ikt}\leq K_i-c_i \qquad \forall i,t
+          \intertext{Cada tripulación debe ser anfitrión o invitado (GA)}
+          \delta_k+\sum_{i,\neq k}\gamma_{ikt}=1 \qquad \forall k,t
+          \intertext{Una tripulación invitada no puede visitar a un anfitrión más de una vez (GB)}
+          \sum_i\gamma_{ijt}\leq1\qquad\forall i,k; i\neq k
+          \intertext{Cualquier par de tripulación pueden juntarse a lo más una vez (W)}
+          \gamma_{ikt}+\gamma_{ilt}+\gamma_{jks}+\gamma_{jls}\leq3\qquad\forall i,j,k,l,t,s\\
+          i\neq j;i\neq k;k<l;i\neq l;k\neq j;j\neq l;s\neq t
+      \end{align*}
+\end{description}
+
+Esta primera instancia de la formulación como ILP posee un espacio de búsqueda de $2^{B^2T}$
+
+Sin embargo, debido a la dificultad de resolver dicho modelo, Smith et al.\cite{Smith1996} propuso una reformulación del problema agregando una nueva variable y modificando la restricción $W$ en tres nuevas restricciones: $S$, $V$, $Y$. Para ello formuló lo siguiente:
+
+\begin{description}
+    \item[Variables] \hfill
+      \begin{align*}
+        &\delta_i = \begin{cases} 1 \quad \text{si el yate $i$ es anfitrión} \\ 0 \quad \text{en otro caso} \end{cases}
+        \qquad \forall i=1..n
+      \end{align*}
+    \begin{align*}
+        &\gamma_{ikt} = \begin{cases} 1 \quad \text{si el yate $k$ es invitado del yate $i$ en el periodo t} \\ 0 \quad \text{en otro caso} \end{cases}
+        \qquad \forall i=1..n, \forall k=1..n, \forall t=1..T
+      \end{align*}
+      \begin{align*}
+        &x_{iklt} = \begin{cases} 1 \quad \text{si las tripulaciones $k$ y $l$ se juntan en el yate $i$ en el periodo t} \\ 0 \quad \text{en otro caso} \end{cases}
+      \end{align*}
+  \item[Parámetros] \hfill
+    \begin{description}
+      \item[$B$:] número total de yates
+      \item[$c_i$:] tripulación del yate $i \qquad \forall i=1..n$
+      \item[$K_i$:] capacidad total del yate $i \qquad \forall i=1..n$
+      \item[$T$:] Cantidad de rondas
+    \end{description}
+
+    \item[Función Objetivo] \hfill
+      \begin{align*}
+        &\text{Min} \; \sum_{i\in I}
+      \end{align*}
+    \item[Restricciones] \hfill
+      \begin{align*}
+          \intertext{Un bote puede sólo puede ser visitado si es anfitrión (CD)}
+          \gamma_{ikt}-\delta_i \leq 0 \qquad \forall i,k,t; i\neq k
+          \intertext{La capacidad de los yates anfitriones no puede ser excedida (CCAP)}
+          \sum_{k,k\neq i}c_k\gamma_{ikt}\leq K_i-c_i \qquad \forall i,t
+          \intertext{Cada tripulación debe ser anfitrión o invitado (GA)}
+          \delta_k+\sum_{i,\neq k}\gamma_{ikt}=1 \qquad \forall k,t
+          \intertext{Una tripulación invitada no puede visitar a un anfitrión más de una vez (GB)}
+          \sum_i\gamma_{ijt}\leq1\qquad\forall i,k; i\neq k
+          \intertext{Cualquier par de tripulación pueden juntarse a lo más una vez (S)}
+          2x_{iklt}-\gamma_{ikt}-\gamma_{ilt} \leq 0 \qquad\forall i,k,l,t;k<l;i\neq k;i\neq l
+          \intertext{Cualquier par de tripulación pueden juntarse a lo más una vez (V)}
+          \gamma_{ikt}+\gamma_{ilt}-x_{iklt} \leq 1 \qquad\forall i,k,l,t;k<l;i\neq k;i\neq l
+          \intertext{Cualquier par de tripulación pueden juntarse a lo más una vez (Y)}
+          \sum_t\sum_{l,l>k}x_{iklt}\leq1\qquad\forall i,k
+      \end{align*}
+\end{description}
+
+Con este nuevo planteamiento de ILP, se tiene un espacio de búsqueda de $2^{B^2T}$, por lo que se mantiene con respecto al modelo planteado inicialmente. Sin embargo, con esta instancia del problema se redice la complejidad total de número de filas de $O(B^4T^2)$ a $O(B^3T)$, lo que sin duda es una reducción considerable.
+
+\subsection{Programación Lineal/Lógica Mixta}
+
+Años después, en 1999, J. N. Hooker\cite{Hooker1999395} propuso una formulación basada en Programación Lineal/Lógica Mixta (MLLP, por sus siglas en inglés).
+
+\begin{description}
+    \item[Variables] \hfill
+    \begin{align*}
+        &z_i = \begin{cases} 1 \quad \text{si el yate $i$ es anfitrión} \\ 0 \quad \text{en otro caso} \end{cases}
+        \qquad \forall i=1..n
+      \end{align*}
+      \begin{align*}
+          &h_{it} = \text{Yate anfitrión que está siendo visitado por la tripulación $i$ en el periodo $t$}
+      \end{align*}
+      \begin{align*}
+           \qquad \forall i\in I, t=0..T, h_{it}\in I
+      \end{align*}
+      \begin{align*}
+        &m_{ijt} = \begin{cases} 1 \quad \text{si las tripulaciones $i$ y $j$ se visitan en el periodo $t$} \\ 0 \quad \text{en otro caso} \end{cases}
+        \qquad \forall i,j\in I, t=0..T
+      \end{align*}
+  \item[Parámetros] \hfill
+    \begin{description}
+      \item[$I$:] Conjunto de yates
+      \item[$c_i$:] tripulación del yate $i \qquad \forall i=1..n$
+      \item[$K_i$:] capacidad total del yate $i \qquad \forall i=1..n$
+      \item[$T$:] Cantidad de rondas
+    \end{description}
+
+    \item[Función Objetivo] \hfill
+      \begin{align*}
+        &\text{Min} \; \sum_{i\in I} z_i
+      \end{align*}
+    \item[Sujeto a] \hfill
+      \begin{align*}
+          \intertext{Definición de $v_{ijt}$}
+          v_{ijt}\equiv (h_{ij}=j), i,j\in I, t\in T
+          \intertext{Las tripulaciones invitadas deben visitar un diferente anfitrión en cada periodo de tiempo}
+          \delta_i\vee TodosDistintos(h_{i1},...,h_{i\mid T\mid}),i\in I
+          \intertext{Una tripulación debe permanecer en su yate ssi es anfitrión}
+          \delta_i\equiv (h_{it}=i), i\in I, t\in T
+          \intertext{Las tripulaciones a bordo deben ser menor que la capacidad del yate}
+          \sum_{i\in I,i\neq j} c_iv_{ijt}\leq K_j-c_j, i,j\in I, t\in T
+          \intertext{Si tripulaciones $i$ y $j$ están ambas visitando tripulaciones, entonces $m_{ijt}=1$ o $h_{it}\neq h_{jt}$}
+          \delta_i \vee \delta_j \vee m_{ijt} \vee (h_{it} \neq h_{jt}); i,j \in I, i<j, t \in T
+          \intertext{Un par de tripulaciones no pueden juntarse más de una vez}
+          \sum_{t\in T}m_{ijt}\leq1; i,j\in I, i<j, h_{ij}\in\{ 1,...,\mid I\mid\}
+      \end{align*}
+\end{description}
+
+Esta formulación con MLLP posee un espacio de búsqueda de $2^{I^2T}$. Esto se obtiene debido a que en la variable $m_{ijt}$ posee dos posibles valores para cada instancia de $I$ (producto de $i$), nuevamente $I$ (producto de $j$) y de $T$ (producto de $t$).
+
+\subsection{CSP}
+
+Smith et.al\cite{Smith1996} planteó el mismo problema, pero como CSP usando el siguiente modelo matemático, con el fin de que quedase mucho más compacto
+
+\begin{description}
+    \item[Variables] \hfill
+      \begin{align*}
+          &h_{it} = \text{Yate anfitrión que está siendo visitado por la tripulación $i$ en el periodo $t$} \qquad h_{it}\in\{1,...,H\}
+      \end{align*}
+      \begin{align*}
+          &v_{ijt} = \begin{cases} 1 \quad \text{si el yate invitado $i$ visita al anfitrión $j$ en periodo $t$} \\ 0 \quad \text{en otro caso} \end{cases}
+        \qquad i\in G, j\in H, t=0..T
+      \end{align*}
+      \begin{align*}
+          &m_{klt} = \begin{cases} 1 \quad \text{si la tripulación $k$ y $l$ se conocen en periodo $t$} \\ 0 \quad \text{en otro caso} \end{cases}
+        \hspace{0cm} (k\in G, l\in H) \vee (l\in G, k\in H), t=0..T
+      \end{align*}
+      
+  \item[Parámetros] \hfill
+    \begin{description}
+      \item[$H$:] Conjunto de yates anfitriones
+      \item[$G$:] Conjunto de yates invitados
+      \item[$T$:] Cantidad de rondas o periodos
+      \item[$c_i$:] Tamaño de la tripulación $i$
+      \item[$C_j$:] Capacidad del anfitrión $j$
+    \end{description}
+
+    \item[Sujeto a] \hfill
+      \begin{align*}
+          \intertext{Tripulaciones invitadas no pueden visitar más de una vez a un anfitrión}
+          h_{i1},h{i2},...,h_{iT} \text{ son todos diferentes } \forall i
+          \intertext{Una tripulación invitada debe ser atendida siempre por un anfitrión}
+          \text{Satisfecha implícitamente por la definición de variables.}
+          \intertext{Una tripulación invitada sólo puede ser asignada a un anfitrión por periodo}
+          \text{Satisfecha implícitamente por la definición de variables.}
+          \intertext{Las tripulaciones a bordo deben ser menor que la capacidad del yate}
+          \intertext{La capacidad del yate no puede ser excedida}
+          \sum_ic_iv_{ijt}\leq C_j \qquad \forall j,t
+          \intertext{Un par de tripulaciones no pueden juntarse dos veces}
+          \sum_i m_{klt}\leq 1 \forall k,l;k<l
+      \end{align*}
+      
+      Este método da un espacio de búsqueda de $2^{GHT}$ ya que para $G$, $H$, $T$ valores hay dos posibles opciones ($0$ y $1$). 
+\end{description}
+
+
+
+%Uno o más modelos matemáticos para el problema, idealmente indicando el espacio de búsqueda para cada uno. Cada modelo debe estar correctamente referenciado, además no debe ser una imagen extraida. También deben explicarse en detalle cada una de las partes, mostrando claramente la función a maximizar/minimizar, variables y restricciones. Tanto las fórmulas como las explicaciones deben ser consistentes.
+
+\section{Conclusiones}
+
+Como se ha señalado anteriormente, para el problema \textit{Progressive Party Problem} existe más de una formulación y enfoque, cada uno con sus ventajas y desventajas, pero todas ellas convergen a los mismos resultados salvo en algunas situaciones. La diferencia recae en el costo tanto de tiempo como de cómputo asociado a esta convergencia ya que como se vio una formulación del tipo Programación Lineal Entera falla si no se tienen los parámetros adecuados. La primera formulación de ILP falla para botes anfitriones mayores que 12, a no ser que se consideren ciertas heurísticas iniciales. La razón de la dificultad de encontrar soluciones a este tipo de modelo es producto de que es demasiado grande para ser resuelto por lo que no hay suficiente tiempo para encontrar soluciones (tan solo para el caso de 15 yates anfitriones se tuvo que abortar la operación luego de 189 horas en ejecución\cite{Smith1996}). Es por esto que una buena formulación del modelo es importantísimo para reducir la mayor cantidad de recursos para encontrar soluciones. Otra buena estrategia para abordar este tipo de problemas es definir y analizar posibles heurísticas que se pueden aplicar al problema. Por ejemplo en este caso conviene ordenar en forma descendiente los yates según su capacidad y definir los primeros $h$ yates como anfitriones. Esto también sirve mucho con la formulación del problema del tipo CSP ya que de por sí representa mucho más directamente el problema en comparación a la formulación del tipo ILP.
+
+Una idea a futuro que sería bien interesante es investigar y generar nuevos marcos de modelamiento que sean mezclas entre los existentes. De esta manera poder combinar lo mejor de dos mundos de modelamiento. Si bien hay semejanzas naturales entre, por ejemplo, modelos del tipo Programación Lineal con modelos del tipo Satisfacción de Restricciones sería interesante que a partir de estos generar un nuevo enfoque que permita encontrar soluciones a un menor costo. Actualmente ya hay tipos de modelamiento que mezclan elementos de uno y de otro, como el caso de MLLP (Programación Lineal/Lógica Mixta) pero eso no significa que no hayan otros por descubrir/inventar.
+
+Como conclusión secundara es posible decir que problemas del tipo combinatorio, como lo es PPP, tienen una gran utilidad para fabricantes de software de optimización ya que a través de este tipo de problemas donde los modelos son bien extensos y grandes permiten evaluar el rendimiento de diversos programas y hacer una especie de benchmark entre ellos para una misma formulación de un problema.
+
+%Conclusiones RELEVANTES del estudio realizado. Debería responder a las preguntas: ?`todas las técnicas resuelven el mismo problema o hay algunas diferencias?, ?`En qué se parecen o difieren las técnicas en el contexto del problema?, ?`qué limitaciones tienen?, ?`qué técnicas o estrategias son las más prometedoras?, ?`existe trabajo futuro por realizar?, ?`qué ideas usted propone como lineamientos para continuar con investigaciones futuras?
+
+
+\section{Bibliografía}
+\bibliographystyle{plain}
+\bibliography{Referencias}
+
+\end{document} 
